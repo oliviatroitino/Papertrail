@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Papertrail</string>
+    <string name="welcome">Welcome!</string>
+    <string name="login">Log In</string>
+    <string name="signup">Sign Up</string>
+</resources>

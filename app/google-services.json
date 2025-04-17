@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "714675350231",
+    "project_id": "papertrail-75267",
+    "storage_bucket": "papertrail-75267.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714675350231:android:f393ee282b2899944cde92",
+        "android_client_info": {
+          "package_name": "com.example.papertrail"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8aFb3M0ktbE1a20uM5Q_l_ANrKhovwK4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
