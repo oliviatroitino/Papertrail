@@ -41,6 +41,15 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.signupButton.setOnClickListener {
+
+            val email = binding.emailInput.text.toString().trim()
+            val password = binding.passwordInput.text.toString().trim()
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Snackbar.make(binding.root, "Please fill in all fields", Snackbar.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             auth.createUserWithEmailAndPassword(
                 binding.emailInput.text.toString(), binding.passwordInput.text.toString()
             ).addOnCompleteListener {
@@ -60,5 +69,4 @@ class SignUpFragment : Fragment() {
             Navigation.findNavController(view).navigate(R.id.action_signUpFragment_to_welcomeFragment)
         }
     }
-
 }
