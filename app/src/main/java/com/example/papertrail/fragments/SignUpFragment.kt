@@ -56,14 +56,30 @@ class SignUpFragment : Fragment() {
                 if (it.isSuccessful) {
                     Snackbar.make(binding.root, "User created successfully", Snackbar.LENGTH_SHORT)
                         .show()
+
                     val user: FirebaseUser = auth.currentUser!!
-                    Log.v("User: ", user.uid)
+                    val uid = user.uid
+                    val email = user.email!!
+
+                    val userRef = database.getReference("users").child(uid)
+                    val userData = mapOf(
+                        "email" to email,
+                        "createdAt" to System.currentTimeMillis()
+                    )
+                    userRef.setValue(userData).addOnSuccessListener {
+                        Log.v("Database", "User saved successfully")
+                    }.addOnFailureListener {
+                        Log.e("Database", "Failed to save user", it)
+                    }
+
+                    Log.v("User: ", uid)
                     auth.signOut()
+
+                    Navigation.findNavController(view).navigate(R.id.action_signUpFragment_to_logInFragment)
                 } else {
                     Snackbar.make(binding.root, "Sign up failed", Snackbar.LENGTH_SHORT).show()
                 }
             }
-            Navigation.findNavController(view).navigate(R.id.action_signUpFragment_to_logInFragment)
         }
         binding.returnButton.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_signUpFragment_to_welcomeFragment)
