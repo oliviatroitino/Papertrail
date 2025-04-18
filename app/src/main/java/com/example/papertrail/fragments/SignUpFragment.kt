@@ -1,6 +1,8 @@
 package com.example.papertrail.fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +11,23 @@ import androidx.navigation.Navigation
 import com.example.papertrail.R
 import com.example.papertrail.databinding.FragmentSignUpBinding
 import com.example.papertrail.databinding.FragmentWelcomeBinding
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 
 class SignUpFragment : Fragment() {
 
     private lateinit var binding: FragmentSignUpBinding
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: FirebaseDatabase
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        auth = FirebaseAuth.getInstance()
+        database =
+            FirebaseDatabase.getInstance("https://papertrail-75267-default-rtdb.europe-west1.firebasedatabase.app/")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,6 +41,19 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.signupButton.setOnClickListener {
+            auth.createUserWithEmailAndPassword(
+                binding.emailInput.text.toString(), binding.passwordInput.text.toString()
+            ).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Snackbar.make(binding.root, "User created successfully", Snackbar.LENGTH_SHORT)
+                        .show()
+                    val user: FirebaseUser = auth.currentUser!!
+                    Log.v("User: ", user.uid)
+                    auth.signOut()
+                } else {
+                    Snackbar.make(binding.root, "Sign up failed", Snackbar.LENGTH_SHORT).show()
+                }
+            }
             Navigation.findNavController(view).navigate(R.id.action_signUpFragment_to_logInFragment)
         }
         binding.returnButton.setOnClickListener {
