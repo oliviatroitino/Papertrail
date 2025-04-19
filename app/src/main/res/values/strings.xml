@@ -8,4 +8,6 @@
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="returnText">Return</string>
+    <string name="welcome_back">Welcome Back!</string>
 </resources>

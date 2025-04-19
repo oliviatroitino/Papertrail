@@ -42,9 +42,8 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="?"
+        android:name="com.example.papertrail.fragments.HomeFragment"
         android:label="HomeFragment">
-
     </fragment>
 
 </navigation>
