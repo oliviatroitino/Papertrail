@@ -6,6 +6,11 @@
     tools:context=".fragments.DailyFragment">
 
 <!--    Quotes API      -->
-
+    <TextView
+        android:id="@+id/text_quote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Loading quote..."
+        android:textSize="18sp" />
 
 </FrameLayout>
