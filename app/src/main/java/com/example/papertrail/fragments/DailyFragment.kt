@@ -1,19 +1,20 @@
 package com.example.papertrail.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.navigation.Navigation
 import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import com.example.papertrail.R
 import com.example.papertrail.databinding.FragmentDailyBinding
-import com.example.papertrail.databinding.FragmentWelcomeBinding
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
+
 
 class DailyFragment : Fragment() {
 
@@ -30,23 +31,31 @@ class DailyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val textView = view.findViewById<TextView>(R.id.text_quote)
 
-        val queue = Volley.newRequestQueue(requireContext())
-        val url = "https://www.google.com"
+        val url = "https://andruxnet-random-famous-quotes.p.rapidapi.com/?cat=famous&count=1"
 
-        val stringRequest = StringRequest(
-            Request.Method.GET, url,
+        val request = object : JsonArrayRequest(
+            Request.Method.GET, url, null,
             { response ->
-                textView.text = "Response is: ${response.substring(0, 500)}"
-            },
-            {
-                textView.text = "That didn't work!"
-            })
+                val quoteObject = response.getJSONObject(0)
+                val quote = quoteObject.getString("quote")
+                val author = quoteObject.getString("author")
 
-        queue.add(stringRequest)
-//        binding.loginButton.setOnClickListener {
-//            Navigation.findNavController(view).navigate(R.id.action_welcomeFragment_to_logInFragment)
-//        }
+                binding.quoteText.text = "\"$quote\""
+                binding.authorText.text = "- $author"
+            },
+            { error ->
+                Log.e("DailyFragment", "Error fetching quote", error)
+            }
+        ) {
+            override fun getHeaders(): Map<String, String> {
+                val headers = HashMap<String, String>()
+                headers["x-rapidapi-key"] = "bc86099804mshcb76e20e47978d7p11dfb4jsn0aa39bc45337"
+                headers["x-rapidapi-host"] = "andruxnet-random-famous-quotes.p.rapidapi.com"
+                return headers
+            }
+        }
+
+        Volley.newRequestQueue(requireContext()).add(request)
     }
 }
