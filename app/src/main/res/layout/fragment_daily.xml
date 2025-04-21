@@ -14,15 +14,56 @@
         android:text="Loading quote..."
         android:textSize="18sp"
         android:layout_marginTop="50dp"
+        android:layout_margin="30dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/authorText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="Loading author..."
         android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/quoteText"
+        app:layout_constraintStart_toStartOf="@+id/quoteText"
         app:layout_constraintTop_toBottomOf="@+id/quoteText" />
+
+    <!--  Today's Journal Entry  -->
+
+    <EditText
+        android:id="@+id/journalEntryTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/title"
+        android:inputType="text"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="@+id/authorText"
+        app:layout_constraintStart_toStartOf="@+id/authorText"
+        app:layout_constraintTop_toBottomOf="@+id/authorText" />
+
+    <EditText
+        android:id="@+id/journalEntryText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:hint="@string/journal_entry_hint"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/saveButton"
+        app:layout_constraintEnd_toEndOf="@+id/authorText"
+        app:layout_constraintStart_toStartOf="@+id/authorText"
+        app:layout_constraintTop_toBottomOf="@+id/journalEntryTitle" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:text="@string/save_entry"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/journalEntryText"
+        app:layout_constraintStart_toStartOf="@+id/journalEntryText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

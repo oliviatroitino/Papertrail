@@ -1,24 +1,37 @@
 package com.example.papertrail.fragments
 
+import android.content.Context
+import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
-import com.example.papertrail.R
+import com.example.papertrail.JournalEntry
 import com.example.papertrail.databinding.FragmentDailyBinding
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import java.util.Date
+import java.util.Locale
 
 
 class DailyFragment : Fragment() {
 
     private lateinit var binding: FragmentDailyBinding
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: FirebaseDatabase
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        auth = FirebaseAuth.getInstance()
+        database =
+            FirebaseDatabase.getInstance("https://papertrail-75267-default-rtdb.europe-west1.firebasedatabase.app/")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,6 +43,47 @@ class DailyFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        binding.saveButton.setOnClickListener{
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val now = sdf.format(Date())
+            val id = Date().time.toString()
+
+            val entry = JournalEntry(
+                id = id,
+                title = binding.journalEntryTitle.text.toString().trim(),
+                content = binding.journalEntryText.text.toString().trim(),
+                dateTime = now
+            )
+
+            if(entry.title.isEmpty()){
+                Snackbar.make(binding.root, "Please add a title for your journal entry", Snackbar.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if(entry.content.isEmpty()){
+                Snackbar.make(binding.root, "Please write something in your journal entry", Snackbar.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val uid = auth.currentUser?.uid
+            if (uid != null) {
+                database.getReference("entries")
+                    .child(uid)
+                    .child(entry.id)
+                    .setValue(entry)
+                    .addOnSuccessListener {
+                        Snackbar.make(binding.root, "Journal entry saved", Snackbar.LENGTH_SHORT).show()
+                        binding.journalEntryTitle.text?.clear()
+                        binding.journalEntryText.text?.clear()
+                    }
+                    .addOnFailureListener {
+                        Snackbar.make(binding.root, "Failed to save entry", Snackbar.LENGTH_SHORT).show()
+                    }
+            } else {
+                Snackbar.make(binding.root, "User not authenticated", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+
         super.onViewCreated(view, savedInstanceState)
 
         val url = "https://andruxnet-random-famous-quotes.p.rapidapi.com/?cat=famous&count=1"
@@ -57,5 +111,7 @@ class DailyFragment : Fragment() {
         }
 
         Volley.newRequestQueue(requireContext()).add(request)
+
+
     }
 }

@@ -10,4 +10,7 @@
     <string name="password">Password</string>
     <string name="returnText">Return</string>
     <string name="welcome_back">Welcome Back!</string>
+    <string name="save_entry">Save entry</string>
+    <string name="journal_entry_hint">Write your thoughts...</string>
+    <string name="title">Title</string>
 </resources>
