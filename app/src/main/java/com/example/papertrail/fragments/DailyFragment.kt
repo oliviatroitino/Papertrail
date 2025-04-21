@@ -15,7 +15,6 @@ import com.example.papertrail.databinding.FragmentDailyBinding
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 
-
 class DailyFragment : Fragment() {
 
     private lateinit var binding: FragmentDailyBinding
