@@ -44,6 +44,34 @@
         android:id="@+id/homeFragment"
         android:name="com.example.papertrail.fragments.HomeFragment"
         android:label="HomeFragment">
+
+        <action
+            android:id="@+id/action_homeFragment_to_entryFragment"
+            app:destination="@id/entryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/entriesFragment"
+        android:name="com.example.papertrail.fragments.EntriesFragment"
+        android:label="EntriesFragment">
+<!--        <action-->
+<!--            android:id="@+id/action_entriesFragment_to_entryFragment"-->
+<!--            app:destination="@id/entryFragment" />-->
+    </fragment>
+
+    <fragment
+        android:id="@+id/entryFragment"
+        android:name="com.example.papertrail.fragments.EntryFragment"
+        android:label="EntryFragment">
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="content"
+            app:argType="string" />
+        <argument
+            android:name="dateTime"
+            app:argType="string" />
     </fragment>
 
 </navigation>

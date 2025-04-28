@@ -1,60 +1,84 @@
 package com.example.papertrail.fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.papertrail.EntryAdapter
+import com.example.papertrail.JournalEntry
 import com.example.papertrail.R
+import com.example.papertrail.databinding.FragmentDailyBinding
+import com.example.papertrail.databinding.FragmentEntriesBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [EntriesFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class EntriesFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private lateinit var binding: FragmentEntriesBinding
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: FirebaseDatabase
+    private lateinit var entriesRef: DatabaseReference
+    private lateinit var entryAdapter: EntryAdapter
+    private lateinit var entryList: ArrayList<JournalEntry>
+    private val entriesList = mutableListOf<JournalEntry>()
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance("https://papertrail-75267-default-rtdb.europe-west1.firebasedatabase.app/")
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_entries, container, false)
+        binding = FragmentEntriesBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment EntriesFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            EntriesFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?){
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.entriesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        val uid = auth.currentUser?.uid
+
+        if (uid != null) {
+            entriesRef = database.getReference("entries").child(uid)
+
+            entriesRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    entriesList.clear()
+                    for (entrySnapshot in snapshot.children) {
+                        val entry = entrySnapshot.getValue(JournalEntry::class.java)
+                        entry?.let { entriesList.add(it) }
+                    }
+                    entriesList.reverse()
+                    binding.entriesRecyclerView.adapter = EntryAdapter(entriesList, requireContext()) { entry ->
+
+                        val bundle = Bundle().apply {
+                            putString("title", entry.title)
+                            putString("content", entry.content)
+                            putString("dateTime", entry.dateTime)
+                        }
+                        findNavController().navigate(R.id.action_homeFragment_to_entryFragment, bundle)
+
+                    }
                 }
-            }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("EntriesFragment", "Database error: ${error.message}")
+                }
+            })
+        }
     }
 }
