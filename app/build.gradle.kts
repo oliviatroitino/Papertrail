@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
+//    id("androidx.navigation.safeargs.kotlin") version "2.8.9"
 }
 
 android {
