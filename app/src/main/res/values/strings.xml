@@ -1,21 +1,24 @@
 <resources>
     <string name="app_name">Papertrail</string>
-    <string name="welcome">Welcome!</string>
+    <string name="welcome">Welcome to Papertrail!</string>
     <string name="login">Log In</string>
     <string name="signup">Sign Up</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="returnText">Return</string>
     <string name="welcome_back">Welcome Back!</string>
-    <string name="save_entry">Save entry</string>
-    <string name="journal_entry_hint">Write your thoughts…</string>
+    <string name="save_entry">Save Entry</string>
+    <string name="journal_entry_hint">Write all about it here...</string>
     <string name="title">Title</string>
     <string name="loading_title">Loading title...</string>
     <string name="loading_date">Loading date...</string>
     <string name="loading_entry">Loading entry...</string>
-    <string name="loading_quote">Loading quote...</string>
+    <string name="loading_quote">“Loading quote...”</string>
     <string name="loading_author">Loading author...</string>
+    <string name="delete">Delete</string>
+    <string name="entryTitle">What happened today?</string>
+    <string name="helloUser">Hello,\nUser.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

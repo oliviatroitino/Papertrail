@@ -3,6 +3,37 @@
     <style name="Base.Theme.Papertrail" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="android:windowBackground">@color/backgroundColor</item>
+
+        <item name="android:fontFamily">@font/tinos_regular</item>
+
+        <item name="materialButtonStyle">@style/AppButtonStyle</item>
+    </style>
+
+<!--    <style name="AppButtonStyle">-->
+<!--        <item name="android:fontFamily">@font/tinos_regular</item>-->
+<!--        <item name="android:background">@color/colorSecondary</item>-->
+<!--        <item name="android:gravity">center</item>-->
+<!--        <item name="android:padding">10dp</item>-->
+<!--    </style>-->
+
+    <style name="AppButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="cornerRadius">16dp</item>
+        <item name="android:fontFamily">@font/dmseriftext_regular</item>
+        <item name="backgroundTint">@color/colorPrimaryVariant</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Widget.MiApp.TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/colorPrimary</item>
+        <item name="tabSelectedTextColor">@color/colorPrimary</item>
+        <item name="tabTextColor">@color/colorOnPrimary</item>
     </style>
 
     <style name="Theme.Papertrail" parent="Base.Theme.Papertrail" />

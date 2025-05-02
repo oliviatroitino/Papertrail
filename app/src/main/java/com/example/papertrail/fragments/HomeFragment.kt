@@ -31,7 +31,7 @@ class HomeFragment : Fragment() {
             tab.text = when (position) {
                 0 -> "Daily"
                 1 -> "Entries"
-                2 -> "User"
+                // 2 -> "User"
                 else -> ""
             }
         }.attach()

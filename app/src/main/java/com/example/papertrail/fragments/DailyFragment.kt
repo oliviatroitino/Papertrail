@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.papertrail.JournalEntry
 import com.example.papertrail.databinding.FragmentDailyBinding
@@ -18,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import java.util.Date
 import java.util.Locale
-
+import java.util.UUID
 
 class DailyFragment : Fragment() {
 
@@ -44,10 +45,28 @@ class DailyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        var name = "User"
+
+        database.getReference("users")
+            .child(uid!!)
+            .child("name")
+            .get().addOnSuccessListener { snapshot ->
+                name = snapshot.getValue(String::class.java).toString()
+                binding.helloUser.text = "Hello, ${name}."
+                Log.d("userName", "Nombre: $name")
+            }.addOnFailureListener{
+                Log.e("userName", "Error al obtener el nombre")
+                binding.helloUser.text = "Hello."
+            }
+
         binding.saveButton.setOnClickListener{
             val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val now = sdf.format(Date())
-            val id = Date().time.toString()
+            val uid = auth.currentUser?.uid
+            val entries = FirebaseDatabase.getInstance().getReference("entries").child(uid!!)
+            val newRef = entries.push()
+            val id = newRef.key ?: UUID.randomUUID().toString()
 
             val entry = JournalEntry(
                 id = id,
@@ -65,7 +84,6 @@ class DailyFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val uid = auth.currentUser?.uid
             if (uid != null) {
                 database.getReference("entries")
                     .child(uid)
@@ -86,17 +104,16 @@ class DailyFragment : Fragment() {
 
         super.onViewCreated(view, savedInstanceState)
 
-        val url = "https://andruxnet-random-famous-quotes.p.rapidapi.com/?cat=famous&count=1"
+        val url = "https://quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com/quote?token=ipworld.info"
 
-        val request = object : JsonArrayRequest(
+        val request = object : JsonObjectRequest(
             Request.Method.GET, url, null,
             { response ->
-                val quoteObject = response.getJSONObject(0)
-                val quote = quoteObject.getString("quote")
-                val author = quoteObject.getString("author")
+                val text = response.getString("text")
+                val author = response.getString("author")
 
-                binding.quoteText.text = "\"$quote\""
-                binding.authorText.text = "- $author"
+                binding.quoteText.text = "“$text”"
+                binding.authorText.text = "$author"
             },
             { error ->
                 Log.e("DailyFragment", "Error fetching quote", error)
@@ -105,13 +122,12 @@ class DailyFragment : Fragment() {
             override fun getHeaders(): Map<String, String> {
                 val headers = HashMap<String, String>()
                 headers["x-rapidapi-key"] = "bc86099804mshcb76e20e47978d7p11dfb4jsn0aa39bc45337"
-                headers["x-rapidapi-host"] = "andruxnet-random-famous-quotes.p.rapidapi.com"
+                headers["x-rapidapi-host"] = "quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com"
                 return headers
             }
         }
 
         Volley.newRequestQueue(requireContext()).add(request)
-
 
     }
 }

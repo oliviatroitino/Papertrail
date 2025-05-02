@@ -6,12 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 class EntryAdapter (var entries: List<JournalEntry>,
                     var context: Context,
                     val onEntryClick: (JournalEntry) -> Unit):
     RecyclerView.Adapter<EntryAdapter.EntryViewHolder>() {
+
+    val cardColors = listOf(
+        R.color.card_blue,
+        R.color.card_orange,
+        R.color.card_purple,
+        R.color.card_green,
+        R.color.card_pink
+    )
+
 
     inner class EntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleText: TextView = itemView.findViewById(R.id.cardEntryTitle)
@@ -27,6 +37,8 @@ class EntryAdapter (var entries: List<JournalEntry>,
 
     override fun onBindViewHolder(holder: EntryViewHolder, position: Int) {
         val entry = entries[position]
+        val colorRes = cardColors[position % cardColors.size]
+        holder.card.setCardBackgroundColor(ContextCompat.getColor(context, colorRes))
         holder.titleText.text = entry.title
         holder.dateText.text = entry.dateTime
         holder.previewText.text = entry.content.take(100) + "..."

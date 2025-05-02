@@ -69,6 +69,7 @@ class EntriesFragment : Fragment() {
                             putString("title", entry.title)
                             putString("content", entry.content)
                             putString("dateTime", entry.dateTime)
+                            putString("entryId", entry.id)
                         }
                         findNavController().navigate(R.id.action_homeFragment_to_entryFragment, bundle)
 

@@ -42,16 +42,17 @@ class SignUpFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.signupButton.setOnClickListener {
 
+            val name = binding.nameInput.text.toString().trim()
             val email = binding.emailInput.text.toString().trim()
             val password = binding.passwordInput.text.toString().trim()
 
-            if (email.isEmpty() || password.isEmpty()) {
+            if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
                 Snackbar.make(binding.root, "Please fill in all fields", Snackbar.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             auth.createUserWithEmailAndPassword(
-                binding.emailInput.text.toString(), binding.passwordInput.text.toString()
+                email, password
             ).addOnCompleteListener {
                 if (it.isSuccessful) {
                     Snackbar.make(binding.root, "User created successfully", Snackbar.LENGTH_SHORT)
@@ -63,6 +64,7 @@ class SignUpFragment : Fragment() {
 
                     val userRef = database.getReference("users").child(uid)
                     val userData = mapOf(
+                        "name" to name,
                         "email" to email,
                         "createdAt" to System.currentTimeMillis()
                     )
