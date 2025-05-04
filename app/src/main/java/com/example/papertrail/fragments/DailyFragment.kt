@@ -8,11 +8,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.bumptech.glide.Glide
 import com.example.papertrail.JournalEntry
+import com.example.papertrail.R
 import com.example.papertrail.databinding.FragmentDailyBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -60,11 +63,36 @@ class DailyFragment : Fragment() {
                 binding.helloUser.text = "Hello."
             }
 
+        val imageView = view.findViewById<ImageView>(R.id.motivationalImage)
+        val imageUrl = "https://plus.unsplash.com/premium_photo-1687067885966-d755107af021?q=80&w=2664&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+
+        Glide.with(requireContext())
+            .load(imageUrl)
+            .into(imageView)
+
         binding.saveButton.setOnClickListener{
             val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val now = sdf.format(Date())
             val uid = auth.currentUser?.uid
-            val entries = FirebaseDatabase.getInstance().getReference("entries").child(uid!!)
+
+            if(uid==null){
+                Snackbar.make(binding.root, "User not authenticated", Snackbar.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val title = binding.journalEntryTitle.text.toString().trim()
+            val content = binding.journalEntryText.text.toString().trim()
+
+            if(title.isEmpty()){
+                Snackbar.make(binding.root, "Please add a title for your journal entry", Snackbar.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if(content.isEmpty()){
+                Snackbar.make(binding.root, "Please write something in your journal entry", Snackbar.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val entries = database.getReference("entries").child(uid!!)
             val newRef = entries.push()
             val id = newRef.key ?: UUID.randomUUID().toString()
 
@@ -75,20 +103,8 @@ class DailyFragment : Fragment() {
                 dateTime = now
             )
 
-            if(entry.title.isEmpty()){
-                Snackbar.make(binding.root, "Please add a title for your journal entry", Snackbar.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            if(entry.content.isEmpty()){
-                Snackbar.make(binding.root, "Please write something in your journal entry", Snackbar.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
             if (uid != null) {
-                database.getReference("entries")
-                    .child(uid)
-                    .child(entry.id)
-                    .setValue(entry)
+                newRef.setValue(entry)
                     .addOnSuccessListener {
                         Snackbar.make(binding.root, "Journal entry saved", Snackbar.LENGTH_SHORT).show()
                         binding.journalEntryTitle.text?.clear()
@@ -101,8 +117,6 @@ class DailyFragment : Fragment() {
                 Snackbar.make(binding.root, "User not authenticated", Snackbar.LENGTH_SHORT).show()
             }
         }
-
-        super.onViewCreated(view, savedInstanceState)
 
         val url = "https://quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com/quote?token=ipworld.info"
 

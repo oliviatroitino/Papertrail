@@ -10,7 +10,6 @@ class HomePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
         return when (position) {
             0 -> DailyFragment()
             1 -> EntriesFragment()
-//            2 -> UserFragment()
             else -> throw IllegalStateException("Invalid position")
         }
     }

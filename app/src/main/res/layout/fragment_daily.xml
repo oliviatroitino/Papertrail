@@ -136,6 +136,13 @@
                 app:layout_constraintStart_toStartOf="@+id/quoteText"
                 app:layout_constraintTop_toBottomOf="@+id/quoteText" />
 
+            <ImageView
+                android:id="@+id/motivationalImage"
+                android:layout_width="match_parent"
+                android:layout_height="125dp"
+                android:scaleType="centerCrop"
+                android:layout_margin="16dp"
+                />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

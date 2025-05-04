@@ -70,5 +70,6 @@ dependencies {
     implementation(libs.volley)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.glide)
 
 }
